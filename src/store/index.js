@@ -52,7 +52,7 @@ export default createStore({
         },
         orderListEd(state) {
             state.orderListEnd = state.orderListEnd.concat(state.orderList)
-            
+
         },
         addaddress(state, value) {
             if (value.isDefault) {
@@ -89,6 +89,9 @@ export default createStore({
             if (value.isDefault) {
                 state.userAddress[0].isDefault = true
             }
+            localStorage.setItem('userAddress', JSON.stringify(state.userAddress
+
+            ))
         }
     },
     actions: {}
