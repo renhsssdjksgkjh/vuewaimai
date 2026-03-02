@@ -6,7 +6,7 @@ export default createStore({
         isDelete: true,  //确定header组件，点击编辑的时候，底部组件的展示
         edit: true,   //默认展示编辑转状态
         orderList: [],
-        userAddress: [{
+        userAddress: JSON.parse(localStorage.getItem('userAddress')) || [{
             id: 1001,
             name: '靓仔',
             tel: '17823372572',
@@ -52,33 +52,42 @@ export default createStore({
         },
         orderListEd(state) {
             state.orderListEnd = state.orderListEnd.concat(state.orderList)
+            
         },
         addaddress(state, value) {
-            state.userAddress.map(item => {
-                if (value.isDefault) {
+            if (value.isDefault) {
+                state.userAddress.forEach(item => {
                     item.isDefault = false
-                }
-                state.userAddress.push(value)
-            })
+                })
+            }
+            //给新增的地址手动添加id，当点击修改按钮时，item.id就不再是undefined！
+            const newAddress = {
+                ...value,
+                id: Date.now()
+            }
+            state.userAddress.push(newAddress)
+            localStorage.setItem('userAddress', JSON.stringify(state.userAddress))
         },
         editaddress(state, value) {
+            if (value.isDefault) {
+                state.userAddress = state.userAddress.map(item => {
+                    if (item.id !== value.id) {
+                        return { ...item, isDefault: false };
+                    }
+                    return item;
+                });
+            }
+
             state.userAddress = state.userAddress.map(item => {
-                if (value.isDefault) {
-                    item.isDefault = false
-                }
-                if (item.id == value.id) {
-                    return value
-                } else {
-                    return item
-                }
-            })
+                return item.id === value.id ? value : item;
+            });
         },
         deleteaddress(state, value) {
             state.userAddress = state.userAddress.filter(item => {
                 return !(item.id === value.id)
             })
-            if(value.isDefault){
-                state.userAddress[0].isDefault=true
+            if (value.isDefault) {
+                state.userAddress[0].isDefault = true
             }
         }
     },

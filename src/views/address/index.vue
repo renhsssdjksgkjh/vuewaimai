@@ -23,7 +23,7 @@ const init = () => {
             tel: item.tel,
             address: `${item.province}${item.city}${item.county}${item.addressDetail}`,
             isDefault: item.isDefault
-        }
+        }   
     })
 }
 
